@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vishal's Website | Projects</title>
+        <link rel="icon" href="../../images/wimpy.png">
+        <meta name="description" content="This is Vishal's Website">
+        <link rel="stylesheet" href="../../styles/styles.css">
+        <script src="../../scripts/header&footer.js"></script>
+
+        <link rel="stylesheet" href="../../styles/style.css" />
+        <link rel="stylesheet" href="../../styles/prism.css" />
+
+    </head>
+    <body>
+        <div id="headerin"></div>
+        <section class="content-section container">
+            <h2 class="section-header">Door Lock System using RFID</h2>
+
+            <h3>Introduction</h3>
+            <p>In this project we are going to make a door lock system using an arduino uno and an ESP32, where the Arduino is going to be placed outside the door and whenever a person scans an rfid card that is valid the HC-05 Bluetooth Module sends a message via bluetooth to the ESP32 that is placed inside the door and when the ESP32 recieves a message it uses a servo motor to open the door.</p>
+
+            <h3>Hardware Required:-</h3>
+            <ol>
+                <li>Arduino Uno</li>
+                <li>ESP32 DEV KIT V1</li>
+                <li>HC-05 Bluetooth Module</li>
+                <li>Jumper Wires</li>
+                <li>LCD Display 16X2</li>
+                <li>Potentiometer</li>
+                <li>RC522 RFID Reader</li>
+                <li>Servo Motor</li>
+                <li>Ultrasonic Sensor HC-SR04</li>
+                <li>Breadboard (Not Necessary)</li>
+            </ol>
+
+            <h3>Software Required:-</h3>
+            <ol>
+                <li>Arduino IDE</li>
+            </ol>
+
+            <h3>Arduino IDE Libraries:-</h3>
+            <ol>
+                <li>BluetoothSerial</li>
+                <li>ESP32Servo</li>
+                <li>LiquidCrystal</li>
+                <li>MFRC522</li>
+                <li>SoftwareSerial</li>
+            </ol>
+
+            <h3>Bluetooth Serial Communication Setup</h3>
+            <p>To setup a bluetooth connection between the HC-05 Bluetooth Module and the inbuilt Bluetooth Module of the ESP32 we first need to find the bluetooth address of the ESP32 and to do that you need to upload the code given in the "Arduino Projects\DoorLockSystemUsingRFID_Card\ESP32\ESP32BluetoothAddressFinder" folder or used the code given below and open it through the "Arduino IDE" software. After the code is uploaded to the ESP32 you have to open the serial monitor and press EN button to reset the board. Then some text will appear on the serial monitor, the last line of this text will be the bluetooth address of the ESP32. It will look something like this "X0:00:X0:XX:0X:X0".</p>
+            <div class="container">
+                <div class="code-wrapper">
+                    <pre>
+                        <code id="code" class="language-c">
+                            /* * {
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
+                            } */
+                              
+                            body {
+                                background-color: aliceblue;;
+                                /* display: flex; */
+                                align-items: center;
+                                justify-content: center;
+                                height: 100vh;
+                            }
+                              
+                            .container {
+                                width: auto;
+                                height: auto;
+                                overflow-x: auto;
+                                border-radius: 12px;
+                            }
+                              
+                            .language {
+                                color: white;
+                                background-color: #1f4287;
+                                padding: 12px 16px;
+                                border-radius: 5px 5px 0 0;
+                                text-align: right;
+                            }
+                              
+                            .code-wrapper {
+                                position: relative;
+                            }
+                              
+                            .code-wrapper pre {
+                                background-color: #071e3d;
+                                color: white;
+                                padding: 8px 20px;
+                                border-radius: 0 0 5px 5px;
+                            }
+                              
+                            #copy-button {
+                                position: absolute;
+                                top: 8px;
+                                right: 8px;
+                                padding: 7px;
+                                background-color: #2d2d2d;
+                                outline: none;
+                                color: white;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                transition: all 0.2s ease-in;
+                                opacity: 0;
+                                border: 1px solid antiquewhite;
+                            }
+                              
+                            #copy-button.show-msg{
+                                display: none;
+                            }
+                              
+                            #copy-button:hover {
+                                background-color: #423e3e;
+                            }
+                              
+                            .code-wrapper:hover #copy-button {
+                                opacity: 1;
+                            }
+                        </code>
+                    </pre>
+                    <button id="copy-button">Copy</button>
+                </div>
+            </div>
+            <p>Now that we have found the bluetooth address of the ESP32 we need to tell the HC-05 bluetooth module to connect to this address and to do this we used something called the AT commands. To use these AT commands we first need to upload a blank sketch to the arduino board and build the circuit given in the "Arduino Projects\DoorLockSystemUsingRFID_Card\ArduinoUno\HC-05 Bluetooth ModuleHC-05 - Circuit Diagram". After this unplug the arduino from the computer. Now press and hold the button on the HC-05 Bluetooth Module and plug the arduino back into the computer and release the button. Now the led on the bluetooth module will blink at intervals of two seconds, this shows that the module has entered AT command mode.</p>
+            <p>Now that AT command mode is turned on open the serial monitor on the arduino IDE software and type "AT" without the quotes and hit enter. If you get an "OK" you have entered AT command mode successfully or if you don't you can try again from paragraph two of "Bluetooth Serial Communication Setup" or you can find my email at the end of this document.</p>
+            <p>Now you have to tell the Bluetooth module to connect to the given Bluetooth address using AT commands. So, we will use an AT command called "AT+BIND". Now for example, if your bluetooth address is "X0:00:X0:XX:0X:X0" remove the first, fourth and fifth colon and it will look something like "X000:X0:XX0XX0". Now replace all the colons with commas and make every thing lowercase to make it look like "x000,x0,xx0xx0". So, if your bluetooth address is "12:34:56:AB:CD:EF" then it will look like "1234,56,abcdef". Then you will type "AT+BIND=(your bluetooth address)", for example "AT+BIND=1234,56,abcdef" in the serial monitor. If you get an "OK" you have paired your ESP32 and HC-05 Bluetooth Module successfully or if you don't you can try again from paragraph two of "Bluetooth Serial Communication Setup" or you can find my email at the end of this document.</p>
+            <p>Now that we have paired the ESP32 and the HC-05 Bluetooth Module together, it is time to start with the actual project.</p>
+
+            <h3>Arduino Uno</h3>
+            <p>On the Arduino Uno, complete the circuit given inside the 'Arduino Projects\DoorLockSystem\ArduinoUno\ArduinoUno - Circuit Diagram.pdf' file and open the code given inside the 'Arduino Projects\DoorLockSystem\ArduinoUno\ArduinoUnoCode' folder through the "Arduino IDE" software. Install all the required libraries. Upload the code the to the arduino board.</p>
+
+            <h3>ESP32 DEV KIT</h3>
+            <p>On the ESP32, complete the circuit given inside the 'Arduino Projects\DoorLockSystem\ESP32\ESP32 - Circuit Diagram.pdf' file and open the code given inside the 'Arduino Projects\DoorLockSystem\ESP32\ESP32MainCode' folder through the "Arduino IDE" software. Install all the required libraries. Upload the code the to the ESP32.</p>
+
+            <h3>All Done!</h3>
+            <p>Now your door lock system needs to work perfectly.</p>
+
+            <a href="/images/myw3schoolsimage.jpg" download="VishalsWebsiteDoorLockSystemUsingRFID">Download Code</a>            
+            
+        </section>
+        <div id="footerin"></div>
+        <script src="../../scripts/main.js" defer></script>
+        <script src="../../scripts/prism.js"></script>
+    </body>
+</html>

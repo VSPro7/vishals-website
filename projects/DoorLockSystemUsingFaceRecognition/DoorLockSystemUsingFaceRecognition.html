@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Vishal's Website | Projects</title>
+        <link rel="icon" href="../../images/wimpy.png">
+        <meta name="description" content="This is Vishal's Website">
+        <link rel="stylesheet" href="../../styles/styles.css">
+        <script src="../../scripts/header&footer.js"></script>
+    </head>
+    <body>
+        <div id="headerin"></div>
+        <section class="content-section container">
+            <h2 class="section-header">Door Lock System Face Recognition</h2>
+
+            <h3>Introduction</h3>
+            <p>In this project we are going to make a door lock system using an ESP32-CAM and an ESP32, where the ESP32-CAM is going to be placed outside the door and whenever a valid face is detected by the ESP32-CAM using the images stored in its SD Card sends a message via bluetooth to the ESP32 that is placed inside the door and when the ESP32 recieves a message it uses a servo motor to open the door. There is also a Ultrasonic Sensor inside that is going to open the door when you place your hand in front of it if you are inside the room.</p>
+            <p>There are two codes for the ESP32-CAM in the "Arduino Projects\DoorLockSystemUsingFaceRecognition\ESP32-CAM" folder. One is with motion detection and the other is without it. In the with motion dection version the ESP32-CAM automatically turns on its flash when it dectects motion to recognises faces even in low light conditions. But the disadvantage of motion detection is that it reduces the frame rate of the camera and hence increases the time taken to recognise faces and it also stuggles to recognise faces in good lighting conditions while the without motion detection version recognises them almost immediately. So, I recommend the without motion dection version because it is faster than the with motion dection version.</p>
+
+            <h3>Hardware Required:-</h3>
+            <ol>
+                <li>AI Thinker ESP32-CAM</li>
+                <li>ESP32 DEV KIT V1</li>
+                <li>Jumper Wires</li>
+                <li>Servo Motor</li>
+                <li>Ultrasonic Sensor HC-SR04</li>
+                <li>Breadboard (Not Necessary)</li>
+            </ol>
+
+            <h3>Software Required:-</h3>
+            <ol>
+                <li>Arduino IDE</li>
+            </ol>
+
+            <h3>Arduino IDE Libraries:-</h3>
+            <ol>
+                <li>BluetoothSerial</li>
+                <li>ESP32Servo</li>
+                <li>esp_camera          //Video functions</li>
+                <li>esp_jpg_decode</li>
+                <li>fb_gfx              //Image drawing function</li>
+                <li>fd_forward          //Face detection function</li>
+                <li>FS                  //File system functions</li>
+                <li>fr_forward          //Face recognition function</li>
+                <li>img_converters      //Image format conversion function</li>
+                <li>SD_MMC              //SD card access function</li>
+                <li>soc/rtc_cntl_reg    //It is used for power supply instability and does not restart</li>
+                <li>soc/soc             //It is used for power supply instability and does not restart</li>
+            </ol>
+            <h3>Setup</h3>
+            <p>Get an SD Card and format it to "FAT32".</p>
+            <p>Intall the latest esp32 board manager by Espressif Systems on Arduino IDE and go to "File>Examples>ESP32>Camera>CameraWebServer". When the code opens, under 'Select Camera Model' comment out "#define CAMERA_MODEL_WROVER_KIT" and uncomment "#define CAMERA_MODEL_AI_THINKER". Then scroll down and enter your wifi ssid and password correctly and the upload the code and don't forget to press to reset button while uploading. If everything goes right you will get an IP Address in the serial monitor. Enter this IP in your browser and wait for the webpage to open. When the webpage opens, under resolutions choose CIF Resolution and then scroll down and press the start stream button. Scroll up and you will be able to see the camera's output. On the camera output you will be able to see a save button, aim the camera directly on your face and press save and the image will be dowloaded onto your computer. Click 8 clear and good pictures of your face and save them on your SD Card for face recognition as 1.jpg, 2.jpg, 3.jpg, 4.jpg, 5.jpg, 6.jpg, 7.jpg and 8.jpg. If you have another person for face recognition click his pictures also and save it on the SD Card as 9.jpg, 10.jpg, 11.jpg, 12.jpg, 13.jpg, 14.jpg, 15.jpg and 16.jpg and so on to add other people. You can save upto seven people.</p>
+
+            <h3>Bluetooth Serial Communication Setup</h3>
+            <p>To setup a bluetooth connection between the inbuilt Bluetooth Modules of the ESP32-CAM and the ESP32 we first need to find the bluetooth address of the ESP32 and to do that you need to upload the code given in the "Arduino Projects\DoorLockSystemUsingFaceRecognition\ESP32\ESP32BluetoothAddressFinder" folder through the "Arduino IDE" software. After the code is uploaded to the ESP32 you have to open the serial monitor and press EN button to reset the board. Then some text will appear on the serial monitor, the last line of this text will be the bluetooth address of the ESP32. It will look something like this for example "X0:00:X0:XX:0X:X0". Now that we have found the bluetooth address of the ESP32 we need to tell the ESP32-CAM to connect to this address and to do this we need to write down the ESP32's MAC address in HEX and the that means replacing every ":" symbol with a comma (,) and writing "0x" before every pair of alphanumericals, for example writing down your MAC address that looks like this "X0:00:X0:XX:0X:X0" like this "0xX0, 0x00, 0xX0, 0xXX, 0x0X, 0xX0". Now after obtaining the HEX version of our MAC address we have to type it inside the 'address' variable in the code present in the "Arduino Projects\DoorLockSystemUsingFaceRecognition\ESP32-CAM" folder.</p>
+            <p>Now that we have paired the ESP32 and ESP32-CAM together, it is time to start with the actual project.</p>
+
+            <h3>ESP32-CAM</h3>
+            <p>Install esp32 board manager by Espressif Systems version 1. 0. 6 because in the latest versions the algoprithms run too slow for proper face recognition. On the ESP32-CAM, open the code given inside the 'Arduino Projects\DoorLockSystemUsingFaceRecognition\ESP32-CAM' folder through the "Arduino IDE" software. Install all the required libraries. Upload the code the to the ESP32-CAM board.</p>
+
+            <h3>ESP32 DEV KIT V1</h3>
+            <p>On the ESP32, complete the circuit given inside the 'Arduino Projects\DoorLockSystemUsingFaceRecognition\ESP32ESP32 - Circuit Diagram.pdf' file and open the code given inside the 'Arduino Projects\DoorLockSystemUsingFaceRecognition\ESP32\ESP32MainCode' folder through the "Arduino IDE" software. Install all the required libraries. Upload the code the to the ESP32.</p>
+
+            <h3>All Done!</h3>
+            <p>Now your door lock system needs to work perfectly.</p>
+            <p>If it does not work for you, you can mail me with the email that you can find at the end of this page.</p>
+
+        </section>
+        <div id="footerin"></div>
+    </body>
+</html>
